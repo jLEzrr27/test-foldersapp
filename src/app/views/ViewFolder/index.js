@@ -23,6 +23,7 @@ export const ViewFolder = ({location}) => {
 
     const [nameFolder, setNameFolder] = useState("");
 
+    /*Setea los valores para pintar los archivos en la vista de la carpeta*/
     const getFilesFolder = (idFolder) =>{
 
         (async () => {
@@ -88,7 +89,7 @@ export const ViewFolder = ({location}) => {
                                     <div key={key} className="border border-link m-2 col-3">
                                         <div className="pt-3 pb-3">
                                             <div className="d-flex justify-content-center">
-                                                <h2><Icon.FileEarmarkArrowDown /></h2>
+                                                <h2><Icon.FileEarmark /></h2>
                                             </div>
                                             <div className="d-flex justify-content-center">
                                                 <p>{file.nameFile}</p>
@@ -111,7 +112,8 @@ export const ViewFolder = ({location}) => {
 
             <ModalToCreateFile AsyncStorage={AsyncStorage} Folder={Folder}
              Folders={Folders} showModalToCreateFile={showModalToCreateFile} 
-            handleClose={handleClose} />
+            handleClose={handleClose} setFolders={setFolders} getFilesFolder={getFilesFolder} 
+            idFolder={idFolder}/>
         </>
     )
 }

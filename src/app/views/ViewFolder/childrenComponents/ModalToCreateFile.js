@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 
-export const ModalToCreateFile = ({AsyncStorage, Folder, Folders, showModalToCreateFile, handleClose }) => {
+export const ModalToCreateFile = ({Folder, Folders, setFolders, showModalToCreateFile, handleClose, getFilesFolder, idFolder}) => {
 
     const [filesSelected, setFilesSelected] = useState([]);
 
@@ -49,14 +49,12 @@ export const ModalToCreateFile = ({AsyncStorage, Folder, Folders, showModalToCre
 
             const FileList = [...filesSelected]; //Aplicamos operador Spread 
 
-            console.log(FileList);
-
             FileList.map((file, key) => {
 
                 const d = new Date();
                 const objFolder = {
                     nameFile: file.name,
-                    base64: strFile64,
+                    //El base64 no se puede guardar debido a que se rompe el storage => base64: strFile64,
                     format: getFormatFile(file.name),
                     id: d.getTime()
                 }
@@ -65,10 +63,15 @@ export const ModalToCreateFile = ({AsyncStorage, Folder, Folders, showModalToCre
 
                 Folder.files = AddFile;
 
+                setFolders( Folders );
+
+                //Seteamos las carpetas con sus archivos en la carpeta como string
                 const json = JSON.stringify(Folders);
-                AsyncStorage.setItem("APPTEST::FOLDERS", json);
+                localStorage.setItem("APPTEST::FOLDERS", json);
 
                 handleClose(); //Cerramos el modal 
+
+                getFilesFolder(idFolder); //Llamos la función que pinta los archivos en la carpeta
             });
 
         }
@@ -93,15 +96,12 @@ export const ModalToCreateFile = ({AsyncStorage, Folder, Folders, showModalToCre
 
                                 FileList.map((file, key) => {
 
-                                    handleReadFile(file);
-
-                                    // const objFile = {
-                                    //     nameFile: file.name,
-                                    //     base64: strFile64,
-                                    //     format: getFormatFile(file.name)
-                                    // }
-                                    
-                                    // //console.log(objFile);
+                                    /*Con esta función convertimos a base64 el archivo
+                                    * Pero el storage se satura al agregar muchos archivos en ese formato
+                                    * Por lo que la comenté ya que en el requerimiento no pide descarga de archivos
+                                    * Para lo cual es necesario tenerlos en un string base64
+                                    */
+                                    //handleReadFile(file);
                                 });
 
                             }
