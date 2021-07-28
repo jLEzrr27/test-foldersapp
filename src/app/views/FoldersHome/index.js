@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import * as Icon from "react-bootstrap-icons";
-import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ModalToCreateFolder } from './childrenComponents/ModalToCreateFolder';
 
 export const FoldersHome = () => {
 
@@ -32,11 +32,11 @@ export const FoldersHome = () => {
         })();
     }, []);
 
+    /*Con esta función insertamos una carpeta en el arreglo a través de storage*/
     const handleCreateFolder = () =>{
 
         const folders = localStorage.getItem("APPTEST::FOLDERS");
         let arrayFoldersStorage = JSON.parse(folders);
-        console.log(arrayFoldersStorage);
 
         const ByfolderName = document.getElementsByName("folderName");
         const folderName = ByfolderName[0].value;
@@ -58,10 +58,9 @@ export const FoldersHome = () => {
         handleClose(); //Cerramos el modal  
     }
 
-
     return (
         <>
-            <div className="card" style={{width: "18rem;"}}>
+            <div className="card" style={{width: "18rem"}}>
                 <div className="card-body">
                     <h5 className="card-title">Gestión de carpetas 
                         <button className="float-md-right btn btn-sm btn-primary" onClick={handleShow}>
@@ -69,20 +68,26 @@ export const FoldersHome = () => {
                         </button>
                     </h5>
                     <hr/>
-                    <div className="row">
+                    <div className="row d-flex justify-content-center">
 
-                        { 
+                        {  /*Validamos que hay carpetas registradas*/
                             (Folders.length > 0) ?
                             (
                                 Folders.map((folder, index) => (
-                                    <div className="col-3 p-2" key={index}>
-                                        <div className="d-flex justify-content-center">
-                                            <h2><Icon.FolderFill /></h2>
+                                    <a
+                                        className="btn-no-style"
+                                        href={"/view-folder/"+folder.id}
+                                        key={index}
+                                    >
+                                        <div className="col-3 p-2" onClick={null}>
+                                            <div className="d-flex justify-content-center">
+                                                <h2><Icon.FolderFill /></h2>
+                                            </div>
+                                            <div className="d-flex justify-content-center">
+                                                <p>{folder.name}</p>
+                                            </div>
                                         </div>
-                                        <div className="d-flex justify-content-center">
-                                            <p>{folder.name}</p>
-                                        </div>
-                                    </div>
+                                    </a>
                                 ))
                             )
                             :
@@ -99,28 +104,7 @@ export const FoldersHome = () => {
                 </div>
             </div>
 
-            <Modal show={showModalToCreateFolder} onHide={handleClose}>
-                <Modal.Header closeButton>
-                <Modal.Title>Crea tu carpeta</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <InputGroup className="mb-2">
-                        <Form.Control
-                            name="folderName"
-                            type="text"
-                            placeholder="Escribe el nombre de la carpeta"
-                        />
-                    </InputGroup>                   
-                </Modal.Body>
-                <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Cerrar
-                </Button>
-                <Button variant="primary" onClick={handleCreateFolder}>
-                    Guardar
-                </Button>
-                </Modal.Footer>
-            </Modal>
+            <ModalToCreateFolder showModalToCreateFolder={showModalToCreateFolder} handleClose={handleClose} handleCreateFolder={handleCreateFolder} />
         </>
 
     )
