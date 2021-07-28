@@ -60,11 +60,11 @@ export const FoldersHome = () => {
 
     return (
         <>
-            <div className="card" style={{width: "18rem"}}>
+            <div className="card">
                 <div className="card-body">
                     <h5 className="card-title">Gestión de carpetas 
                         <button className="float-md-right btn btn-sm btn-primary" onClick={handleShow}>
-                            <Icon.FolderFill /> +
+                            <Icon.FolderFill /> Crear Carpeta
                         </button>
                     </h5>
                     <hr/>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Icon from "react-bootstrap-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import history from "../../../components/History";
@@ -6,7 +6,9 @@ import history from "../../../components/History";
 export const ViewFolder = ({location}) => {
 
     const { pathname } = location;
-    const idFolder = pathname.replace("/", "");
+    const idFolder = pathname.replace("/view-folder/", ""); //Removemos basura en el parámetro para tener solo el ID
+
+    const [noFindFile, setNoFindFile] = useState(false);
 
     const getFilesFolder = (idFolder) =>{
 
@@ -19,15 +21,35 @@ export const ViewFolder = ({location}) => {
                 } 
                 else{
 
-                    const foldersIsEmpty = JSON.parse(value);
+                    const validateFolder = JSON.parse(value);
+
+                    console.log(validateFolder);
 
                     /*En caso de que la carpeta exista pero el array es vacío*/
-                    if(!foldersIsEmpty.length){
+                    if(!validateFolder.length){
                         return history.push("/home")
+                    }
+
+                    const inventario = [
+                        {nombre: 'manzanas', cantidad: 2},
+                        {nombre: 'bananas', cantidad: 0},
+                        {nombre: 'cerezas', cantidad: 5}
+                    ];
+
+                    /*Convertimos el idFolder a integer y buscamos en el array el objeto del archivo*/
+                    const idFolderInt = parseInt(idFolder);
+                    const validatefindFile = console.log(validateFolder.find( folder => folder.id === idFolderInt));
+
+                    if(validatefindFile === undefined){ /*De no conseguir el archivo, usamos el state*/
+                        setNoFindFile(true);
                     }
                 }
             });
         })();
+
+    }
+
+    const handleUploadFile = () => {
 
     }
 
@@ -36,17 +58,20 @@ export const ViewFolder = ({location}) => {
     }, []);
 
     return (
-        <div className="card" style={{width: "18rem"}}>
+        <div className="card" >
             <div className="card-body">
                 <h5 className="card-title">Carpeta: {null}
+                    <button className="float-md-right btn btn-sm btn-primary" onClick={handleUploadFile}>
+                        <Icon.FileEarmarkArrowUp /> Subir Archivo
+                    </button>
                 </h5>
                 <hr/>
                 <div className="row d-flex justify-content-center">
-                            <div className="col-12">
-                                <div className="d-flex justify-content-center">
-                                    No hay archivos creados.
-                                </div>
-                            </div>
+                    <div className="col-12">
+                        <div className="d-flex justify-content-center">
+                            No hay archivos creados.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
