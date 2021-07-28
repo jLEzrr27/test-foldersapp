@@ -13,6 +13,9 @@ export const ViewFolder = ({location}) => {
     const [noFindFile, setNoFindFile] = useState(false);
 
     const [Folders, setFolders] = useState([]);
+    const [Folder, setFolder] = useState({});
+
+    const [Files, setFiles] = useState([]);
 
     const [showModalToCreateFile, setshowModalToCreateFile] = useState(false);
     const handleClose = () => setshowModalToCreateFile(false);
@@ -50,6 +53,11 @@ export const ViewFolder = ({location}) => {
                         setNoFindFile(true);
                     }
                     else{
+
+                        setFolder(validatefindFile);
+
+                        setFiles(validatefindFile.files);
+
                         setNameFolder(validatefindFile.name);
                     }
                 }
@@ -57,7 +65,6 @@ export const ViewFolder = ({location}) => {
         })();
 
     }
-
 
     useEffect(() => {
         getFilesFolder(idFolder);
@@ -74,16 +81,37 @@ export const ViewFolder = ({location}) => {
                     </h5>
                     <hr/>
                     <div className="row d-flex justify-content-center">
-                        <div className="col-12">
-                            <div className="d-flex justify-content-center">
-                                No hay archivos creados.
+                        {  /*Validamos que hay archivos registrados*/
+                            (Files.length > 0) ?
+                            (
+                                Files.map((file, key) => (
+                                    <div key={key} className="border border-link m-2 col-3">
+                                        <div className="pt-3 pb-3">
+                                            <div className="d-flex justify-content-center">
+                                                <h2><Icon.FileEarmarkArrowDown /></h2>
+                                            </div>
+                                            <div className="d-flex justify-content-center">
+                                                <p>{file.nameFile}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )
+                            : (
+                            <div className="col-12">
+                                <div className="d-flex justify-content-center">
+                                    No hay archivos creados.
+                                </div>
                             </div>
-                        </div>
+                            )
+                        }
                     </div>
                 </div>
             </div>
 
-            <ModalToCreateFile showModalToCreateFile={showModalToCreateFile} handleClose={handleClose} />
+            <ModalToCreateFile AsyncStorage={AsyncStorage} Folder={Folder}
+             Folders={Folders} showModalToCreateFile={showModalToCreateFile} 
+            handleClose={handleClose} />
         </>
     )
 }

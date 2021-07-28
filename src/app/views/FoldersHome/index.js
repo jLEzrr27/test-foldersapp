@@ -41,7 +41,7 @@ export const FoldersHome = () => {
         const ByfolderName = document.getElementsByName("folderName");
         const folderName = ByfolderName[0].value;
 
-        var d = new Date(); //Lo usamos para simular ID único de la carpeta
+        const d = new Date(); //Lo usamos para simular ID único de la carpeta
 
         const folder = { //Objeto que representa los datos de la carpeta
             name: folderName,
@@ -73,13 +73,13 @@ export const FoldersHome = () => {
                         {  /*Validamos que hay carpetas registradas*/
                             (Folders.length > 0) ?
                             (
-                                Folders.map((folder, index) => (
+                                Folders.map((folder, key) => (
+                                    <div key={key} className="border border-link m-2 col-3">
                                     <a
                                         className="btn-no-style"
                                         href={"/view-folder/"+folder.id}
-                                        key={index}
                                     >
-                                        <div className="col-3 p-2" onClick={null}>
+                                        <div className="pt-3 pb-3" onClick={null}>
                                             <div className="d-flex justify-content-center">
                                                 <h2><Icon.FolderFill /></h2>
                                             </div>
@@ -88,6 +88,7 @@ export const FoldersHome = () => {
                                             </div>
                                         </div>
                                     </a>
+                                    </div>
                                 ))
                             )
                             :
