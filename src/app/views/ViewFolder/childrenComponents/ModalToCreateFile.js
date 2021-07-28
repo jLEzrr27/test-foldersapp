@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 
-export const ModalToCreateFile = ({Folder, Folders, setFolders, showModalToCreateFile, handleClose, getFilesFolder, idFolder}) => {
+export const ModalToCreateFile = ({
+    Folder,
+    Folders,
+    setFolders,
+    showModalToCreateFile,
+    handleClose,
+    getFilesFolder,
+    idFolder
+}) => {
 
     const [filesSelected, setFilesSelected] = useState([]);
 

@@ -4,6 +4,7 @@ import * as Icon from "react-bootstrap-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import history from "../../../components/History";
 import { ModalToCreateFile } from './childrenComponents/ModalToCreateFile';
+import Swal from "sweetalert2";
 
 export const ViewFolder = ({location}) => {
 
@@ -23,6 +24,30 @@ export const ViewFolder = ({location}) => {
 
     const [nameFolder, setNameFolder] = useState("");
 
+    const Deletefile = (key) => {
+
+        Swal.fire({
+            title: "¿Deseas eliminar el archivo?",
+            icon: "info",
+            confirmButtonText: "Si",
+            showCancelButton: true,
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+                Files.splice(key, 1);
+
+                Folder.files = Files;
+
+                setFolders( Folders );
+
+                const json = JSON.stringify(Folders);
+                localStorage.setItem("APPTEST::FOLDERS", json);
+
+                getFilesFolder(1627503316951);
+            }
+        });
+    
+    }
     /*Setea los valores para pintar los archivos en la vista de la carpeta*/
     const getFilesFolder = (idFolder) =>{
 
@@ -87,12 +112,18 @@ export const ViewFolder = ({location}) => {
                             (
                                 Files.map((file, key) => (
                                     <div key={key} className="border border-link m-2 col-3">
-                                        <div className="pt-3 pb-3">
+                                        <div className="p-1">
                                             <div className="d-flex justify-content-center">
                                                 <h2><Icon.FileEarmark /></h2>
                                             </div>
                                             <div className="d-flex justify-content-center">
                                                 <p>{file.nameFile}</p>
+                                            </div>
+
+                                            <div className="d-flex p-1 row">
+                                                <button className="btn btn-danger btn-sm" onClick={() => {Deletefile(key)}}>
+                                                    <Icon.Trash />
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
