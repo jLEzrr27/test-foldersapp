@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Form } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import history from "../../../components/History";
+import { ModalToCreateFile } from './childrenComponents/ModalToCreateFile';
 
 export const ViewFolder = ({location}) => {
 
@@ -9,6 +11,14 @@ export const ViewFolder = ({location}) => {
     const idFolder = pathname.replace("/view-folder/", ""); //Removemos basura en el parámetro para tener solo el ID
 
     const [noFindFile, setNoFindFile] = useState(false);
+
+    const [Folders, setFolders] = useState([]);
+
+    const [showModalToCreateFile, setshowModalToCreateFile] = useState(false);
+    const handleClose = () => setshowModalToCreateFile(false);
+    const handleShow = () => setshowModalToCreateFile(true);
+
+    const [nameFolder, setNameFolder] = useState("");
 
     const getFilesFolder = (idFolder) =>{
 
@@ -21,27 +31,26 @@ export const ViewFolder = ({location}) => {
                 } 
                 else{
 
+                    /*Parseamos el valor del storage y lo seteamos acá*/
                     const validateFolder = JSON.parse(value);
-
-                    console.log(validateFolder);
+                    setFolders(validateFolder);
 
                     /*En caso de que la carpeta exista pero el array es vacío*/
                     if(!validateFolder.length){
                         return history.push("/home")
                     }
 
-                    const inventario = [
-                        {nombre: 'manzanas', cantidad: 2},
-                        {nombre: 'bananas', cantidad: 0},
-                        {nombre: 'cerezas', cantidad: 5}
-                    ];
-
                     /*Convertimos el idFolder a integer y buscamos en el array el objeto del archivo*/
                     const idFolderInt = parseInt(idFolder);
-                    const validatefindFile = console.log(validateFolder.find( folder => folder.id === idFolderInt));
+                    const validatefindFile = validateFolder.find( folder => folder.id === idFolderInt);
+
+                    console.log(validatefindFile);
 
                     if(validatefindFile === undefined){ /*De no conseguir el archivo, usamos el state*/
                         setNoFindFile(true);
+                    }
+                    else{
+                        setNameFolder(validatefindFile.name);
                     }
                 }
             });
@@ -49,31 +58,32 @@ export const ViewFolder = ({location}) => {
 
     }
 
-    const handleUploadFile = () => {
-
-    }
 
     useEffect(() => {
         getFilesFolder(idFolder);
     }, []);
 
     return (
-        <div className="card" >
-            <div className="card-body">
-                <h5 className="card-title">Carpeta: {null}
-                    <button className="float-md-right btn btn-sm btn-primary" onClick={handleUploadFile}>
-                        <Icon.FileEarmarkArrowUp /> Subir Archivo
-                    </button>
-                </h5>
-                <hr/>
-                <div className="row d-flex justify-content-center">
-                    <div className="col-12">
-                        <div className="d-flex justify-content-center">
-                            No hay archivos creados.
+        <>
+            <div className="card" >
+                <div className="card-body">
+                    <h5 className="card-title"><b>Carpeta:</b> {nameFolder}
+                    <button className="float-md-right btn btn-sm btn-primary" onClick={handleShow}>
+                            <Icon.FileEarmarkArrowUp /> Subir Archivo
+                        </button>
+                    </h5>
+                    <hr/>
+                    <div className="row d-flex justify-content-center">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                No hay archivos creados.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <ModalToCreateFile showModalToCreateFile={showModalToCreateFile} handleClose={handleClose} />
+        </>
     )
 }
