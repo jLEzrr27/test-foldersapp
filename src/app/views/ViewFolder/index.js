@@ -11,8 +11,6 @@ export const ViewFolder = ({location}) => {
     const { pathname } = location;
     const idFolder = pathname.replace("/view-folder/", ""); //Removemos basura en el parámetro para tener solo el ID
 
-    const [noFindFile, setNoFindFile] = useState(false);
-
     const [Folders, setFolders] = useState([]);
     const [Folder, setFolder] = useState({});
 
@@ -43,7 +41,7 @@ export const ViewFolder = ({location}) => {
                 const json = JSON.stringify(Folders);
                 localStorage.setItem("APPTEST::FOLDERS", json);
 
-                getFilesFolder(1627503316951);
+                getFilesFolder(Folder.id); /*Renderizamos de nuevo la vista de archivos de la carpeta por el ID de la carpeta*/
             }
         });
     
@@ -75,10 +73,7 @@ export const ViewFolder = ({location}) => {
 
                     console.log(validatefindFile);
 
-                    if(validatefindFile === undefined){ /*De no conseguir el archivo, usamos el state*/
-                        setNoFindFile(true);
-                    }
-                    else{
+                    if(validatefindFile != undefined){ /*De no conseguir el archivo, usamos el state*/
 
                         setFolder(validatefindFile);
 
