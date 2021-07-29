@@ -2,16 +2,27 @@ import React, {useState, useEffect} from 'react';
 import * as Icon from "react-bootstrap-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalToCreateFolder } from './childrenComponents/ModalToCreateFolder';
+import { ModalToEditFolder } from './childrenComponents/ModalToEditFolder';
 import Swal from "sweetalert2";
 
 export const FoldersHome = () => {
 
     const [Folders, setFolders] = useState([]);
 
+    /* Hook y functions de modal de crear carpeta */
     const [showModalToCreateFolder, setshowModalToCreateFolder] = useState(false);
     const handleClose = () => setshowModalToCreateFolder(false);
     const handleShow = () => setshowModalToCreateFolder(true);
 
+    /* Hook y functions de modal de editar carpeta */
+    const [showModalToEditFolder, setshowModalToEditFolder] = useState(false);
+    const handleCloseEdit = () => setshowModalToEditFolder(false);
+    const handleShowEdit = () => setshowModalToEditFolder(true);
+
+    const [nameFolder, setNameFolder] = useState("");
+    const [indexFolder, setIndexFolder] = useState(null);
+
+    /*Función para renderizar carpetas en la vista*/
     const getFolders = () => {
         /*Cuando se carga el documento, verifica que no exista el storage de Folders para crearlo y dejarlo como un array */
         (async () => {
@@ -33,12 +44,11 @@ export const FoldersHome = () => {
         getFolders();
     }, []);
 
+    /*Función para confirmar eliminación de carpeta*/
     const DeleteFolder = (key) => {
 
-        console.log(key);
-
         Swal.fire({
-            title: "¿Deseas eliminar lacarpeta?",
+            title: "¿Deseas eliminar la carpeta?",
             icon: "info",
             confirmButtonText: "Si",
             showCancelButton: true,
@@ -47,8 +57,6 @@ export const FoldersHome = () => {
             if (result.isConfirmed) {
 
                 Folders.splice(key, 1);
-
-                console.log(Folders);
 
                 setFolders(Folders);
 
@@ -59,7 +67,6 @@ export const FoldersHome = () => {
                 
             }
         });
-    
     }
 
     /*Con esta función insertamos una carpeta en el arreglo a través de storage*/
@@ -88,6 +95,43 @@ export const FoldersHome = () => {
         handleClose(); //Cerramos el modal  
     }
 
+    /*Levanta el modal para editar el nombre de la carpeta*/
+    const EditFolder = (key) => {
+        const { name } = (Folders[key]);
+        handleShowEdit();
+        setIndexFolder(key);
+        setNameFolder(name);
+    }
+
+    /*Guardar edición del nombre al dar click en guardar en el modal*/
+    const handleEditFolder = (key) =>{
+
+        Swal.fire({
+            title: "¿Deseas editar la carpeta?",
+            icon: "info",
+            confirmButtonText: "Si",
+            showCancelButton: true,
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+                const editFolderName = document.getElementsByName("folderName");
+                const folderName = editFolderName[0].value;
+        
+                Folders[key].name = folderName;
+                
+                setFolders(Folders);
+        
+                const json = JSON.stringify(Folders);
+                localStorage.setItem("APPTEST::FOLDERS", json);
+                
+                handleCloseEdit();
+        
+                getFolders();     
+            }
+        });
+    }
+
     return (
         <>
             <div className="card">
@@ -105,7 +149,7 @@ export const FoldersHome = () => {
                             (
                                 Folders.map((folder, key) => (
                                     <div key={key} className="border border-link m-2 col-3 ">
-                                        <div className="pt-3 pb-3" onClick={null}>
+                                        <div className="pt-3 pb-3">
                                             <a className="btn-no-style" href={"/view-folder/"+folder.id}>
                                                 <div className="d-flex justify-content-center">
                                                     <h2><Icon.FolderFill /></h2>
@@ -118,7 +162,7 @@ export const FoldersHome = () => {
                                                 <button className="btn btn-danger btn-sm mr-2" onClick={() => { DeleteFolder(key) }}>
                                                     <Icon.Trash />
                                                 </button>
-                                                <button className="btn btn-secondary btn-sm">
+                                                <button className="btn btn-secondary btn-sm" onClick={() => { EditFolder(key) }}>
                                                     <Icon.Pencil />
                                                 </button>
                                             </div>
@@ -142,6 +186,9 @@ export const FoldersHome = () => {
             </div>
 
             <ModalToCreateFolder showModalToCreateFolder={showModalToCreateFolder} handleClose={handleClose} handleCreateFolder={handleCreateFolder} />
+
+            <ModalToEditFolder showModalToEditFolder={showModalToEditFolder} handleCloseEdit={handleCloseEdit} 
+            handleEditFolder={handleEditFolder} nameFolder={nameFolder} indexFolder={indexFolder}/>
         </>
 
     )

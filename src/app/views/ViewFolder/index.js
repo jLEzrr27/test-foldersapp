@@ -42,6 +42,8 @@ export const ViewFolder = ({location}) => {
 
                 const json = JSON.stringify(Folders);
                 localStorage.setItem("APPTEST::FOLDERS", json);
+
+                getFilesFolder(1627503316951);
             }
         });
     
