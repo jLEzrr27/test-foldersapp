@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import * as Icon from "react-bootstrap-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalToCreateFolder } from './childrenComponents/ModalToCreateFolder';
+import Swal from "sweetalert2";
 
 export const FoldersHome = () => {
 
@@ -11,15 +12,11 @@ export const FoldersHome = () => {
     const handleClose = () => setshowModalToCreateFolder(false);
     const handleShow = () => setshowModalToCreateFolder(true);
 
-    console.log(Folders);
-
-    useEffect(() => {
-
+    const getFolders = () => {
         /*Cuando se carga el documento, verifica que no exista el storage de Folders para crearlo y dejarlo como un array */
         (async () => {
             await AsyncStorage.getItem("APPTEST::FOLDERS").then((value) => {
                 if (value === null) {
-                    console.log("no existen carpetas");
 
                     const json = JSON.stringify([]);
                     AsyncStorage.setItem("APPTEST::FOLDERS", json);
@@ -30,7 +27,40 @@ export const FoldersHome = () => {
                 }
             });
         })();
+    }
+
+    useEffect(() => {
+        getFolders();
     }, []);
+
+    const DeleteFolder = (key) => {
+
+        console.log(key);
+
+        Swal.fire({
+            title: "¿Deseas eliminar lacarpeta?",
+            icon: "info",
+            confirmButtonText: "Si",
+            showCancelButton: true,
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+                Folders.splice(key, 1);
+
+                console.log(Folders);
+
+                setFolders(Folders);
+
+                const json = JSON.stringify(Folders);
+                localStorage.setItem("APPTEST::FOLDERS", json);
+
+                getFolders();
+                
+            }
+        });
+    
+    }
 
     /*Con esta función insertamos una carpeta en el arreglo a través de storage*/
     const handleCreateFolder = () =>{
@@ -74,20 +104,26 @@ export const FoldersHome = () => {
                             (Folders.length > 0) ?
                             (
                                 Folders.map((folder, key) => (
-                                    <div key={key} className="border border-link m-2 col-3">
-                                    <a
-                                        className="btn-no-style"
-                                        href={"/view-folder/"+folder.id}
-                                    >
+                                    <div key={key} className="border border-link m-2 col-3 ">
                                         <div className="pt-3 pb-3" onClick={null}>
-                                            <div className="d-flex justify-content-center">
-                                                <h2><Icon.FolderFill /></h2>
-                                            </div>
-                                            <div className="d-flex justify-content-center">
-                                                <p>{folder.name}</p>
+                                            <a className="btn-no-style" href={"/view-folder/"+folder.id}>
+                                                <div className="d-flex justify-content-center">
+                                                    <h2><Icon.FolderFill /></h2>
+                                                </div>
+                                                <div className="d-flex justify-content-center">
+                                                    <p>{folder.name}</p>
+                                                </div>
+                                            </a>
+                                            <div className="d-flex p-2 row float-right">
+                                                <button className="btn btn-danger btn-sm mr-2" onClick={() => { DeleteFolder(key) }}>
+                                                    <Icon.Trash />
+                                                </button>
+                                                <button className="btn btn-secondary btn-sm">
+                                                    <Icon.Pencil />
+                                                </button>
                                             </div>
                                         </div>
-                                    </a>
+                                   
                                     </div>
                                 ))
                             )

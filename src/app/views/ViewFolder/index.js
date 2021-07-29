@@ -42,8 +42,6 @@ export const ViewFolder = ({location}) => {
 
                 const json = JSON.stringify(Folders);
                 localStorage.setItem("APPTEST::FOLDERS", json);
-
-                getFilesFolder(1627503316951);
             }
         });
     
@@ -101,8 +99,11 @@ export const ViewFolder = ({location}) => {
             <div className="card" >
                 <div className="card-body">
                     <h5 className="card-title"><b>Carpeta:</b> {nameFolder}
-                    <button className="float-md-right btn btn-sm btn-primary" onClick={handleShow}>
+                        <button className="float-md-right btn btn-sm btn-primary" onClick={handleShow}>
                             <Icon.FileEarmarkArrowUp /> Subir Archivo
+                        </button>
+                        <button onClick={() => {history.push("/home")} } className="float-md-right btn btn-sm btn-info mr-2">
+                            Volver
                         </button>
                     </h5>
                     <hr/>
