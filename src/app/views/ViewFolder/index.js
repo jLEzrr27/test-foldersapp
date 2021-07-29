@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import history from "../../../components/History";
@@ -73,7 +72,7 @@ export const ViewFolder = ({location}) => {
 
                     console.log(validatefindFile);
 
-                    if(validatefindFile != undefined){ /*De no conseguir el archivo, usamos el state*/
+                    if(validatefindFile !== undefined){ /*De no conseguir el archivo, usamos el state*/
 
                         setFolder(validatefindFile);
 

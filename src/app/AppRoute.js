@@ -1,14 +1,21 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { WithRouter } from 'react-router';
 
 /*Vistas*/
 import {FoldersHome} from './views/FoldersHome/index';
 import {ViewFolder} from './views/ViewFolder/index';
+import {Login} from './views/Login/index';
 
 export const AppRoute = () => {
     return (
        <Switch>
+           
+           <Route exact path="/" render={() => (
+                <Redirect to="/login"/>
+            )} />
+
+           <Route exact path="/login" component={() => <Login/> } />
+
            <Route exact path="/home" component={() => <FoldersHome/> } />
 
             { /*Con esto obtenemos el id unico de la carpeta para renderizar sus archivos en ViewFolder*/}

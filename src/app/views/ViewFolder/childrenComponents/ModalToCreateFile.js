@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, InputGroup } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 
 export const ModalToCreateFile = ({
     Folder,
@@ -16,7 +16,7 @@ export const ModalToCreateFile = ({
     const [strFile64, setStrFile64] = useState("");
 
     /*Función para leer el archivo y convertilo en base64 */
-    const handleReadFile = (file) => {
+    /*const handleReadFile = (file) => {
 
         const promesaBase64 = new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -42,7 +42,7 @@ export const ModalToCreateFile = ({
         }).catch(function(e){
             console.log(e);
         })
-    }
+    }*/
 
     /*Para obtener el formato del archivo*/
     const getFormatFile = (fileName) => {
