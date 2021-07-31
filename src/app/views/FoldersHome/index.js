@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalToCreateFolder } from './childrenComponents/ModalToCreateFolder';
 import { ModalToEditFolder } from './childrenComponents/ModalToEditFolder';
 import Swal from "sweetalert2";
+import history from "../../../components/History";
 
 export const FoldersHome = () => {
 
@@ -139,6 +140,9 @@ export const FoldersHome = () => {
                     <h5 className="card-title">Gestión de carpetas 
                         <button className="float-md-right btn btn-sm btn-primary" onClick={handleShow}>
                             <Icon.FolderFill /> Crear Carpeta
+                        </button>
+                        <button onClick={() => {history.push("/login")} } className="float-md-right btn btn-sm btn-info mr-2">
+                            Cerrar Sesión
                         </button>
                     </h5>
                     <hr/>

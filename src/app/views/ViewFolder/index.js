@@ -101,6 +101,9 @@ export const ViewFolder = ({location}) => {
                         <button onClick={() => {history.push("/home")} } className="float-md-right btn btn-sm btn-info mr-2">
                             Volver
                         </button>
+                        <button onClick={() => {history.push("/login")} } className="float-md-right btn btn-sm btn-info mr-2">
+                            Cerrar Sesión
+                        </button>
                     </h5>
                     <hr/>
                     <div className="row d-flex justify-content-center">
