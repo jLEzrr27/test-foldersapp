@@ -13,7 +13,8 @@ export const ModalToCreateFile = ({
 
     const [filesSelected, setFilesSelected] = useState([]);
 
-    const [strFile64, setStrFile64] = useState("");
+    //Comentado para no mostrar warnings!
+    //const [strFile64, setStrFile64] = useState("");
 
     /*Función para leer el archivo y convertilo en base64 */
     /*const handleReadFile = (file) => {

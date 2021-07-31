@@ -1,6 +1,7 @@
 import React, {useState, useEffect}  from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import history from "../../../components/History";
+import Swal from "sweetalert2";
 
 export const Login = () => {
 
@@ -30,8 +31,38 @@ export const Login = () => {
 
     const handleLogin = () => {
 
-        const InputEmail = document.getElementsByName("InputEmail");
-        const PasswordInput = document.getElementsByName("PasswordInput");
+        const ByInputEmail = document.getElementsByName("InputEmail");
+        const ByInputPass = document.getElementsByName("InputPass");
+    
+        const Email = ByInputEmail[0].value;
+        const Pass = ByInputPass[0].value;
+
+        /*Validación simple de campos no vacíos*/
+        if(Email === null || Email === "" || Pass === null || Pass === ""){
+            return Swal.fire({
+                title: "Por favor, intenta de nuevo!",
+                text: "Debes llenar los campos de correo y password",
+                icon: "error",
+                confirmButtonText: "OK",
+                });
+        }
+
+        const users = localStorage.getItem("APPTEST::FOLDERSUSERS");
+        let arrayUsersStorage = JSON.parse(users);
+        const validateEmailExist = arrayUsersStorage.find( user => user.email === Email);
+        const validatePassEquals = arrayUsersStorage.find( user => user.password === Pass);
+        
+        if(validateEmailExist === undefined || validatePassEquals === undefined){
+            return Swal.fire({
+                title: "¡Ocurrió un error!",
+                text: "Correo o contraseña incorrectos",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        }
+        else{
+            return history.push("/home");
+        }
     }
 
     return (
@@ -48,12 +79,12 @@ export const Login = () => {
                     </div>
                     <div className="form-group">
                         <label>Password</label>
-                        <input type="password" className="form-control" name="PasswordInput" max="" placeholder="Password" />
+                        <input type="password" className="form-control" name="InputPass" max="" placeholder="Password" />
                     </div>
                 </div>
                 <div className="card-footer">
                     <div className="row justify-content-center">
-                        <button className="btn btn-primary mr-1">Ingresar</button>
+                        <button className="btn btn-primary mr-1" onClick={handleLogin}>Ingresar</button>
                         <button className="btn btn-primary ml-1" onClick={() => {history.push("/register")}}>Registrarse</button>
                         
                     </div>

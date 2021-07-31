@@ -19,12 +19,22 @@ export const RegisterUser = () => {
         const ByInputPass = document.getElementsByName("InputPass");
         const Pass = ByInputPass[0].value;
 
+        /*Validación simple de campos no vacíos*/
+        if(Email === null || Email === "" || Pass === null || Pass === ""){
+            return Swal.fire({
+                title: "Por favor, intenta de nuevo!",
+                text: "Debes llenar los campos de correo y password",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+        }
+
         /*Nos asesguramos que el correo no ha sido registrado*/
         const UserValidateWithEmail = arrayUsersStorage.find( user => user.email === Email);
 
         console.log(UserValidateWithEmail);
 
-        if(UserValidateWithEmail !== undefined){
+        if(UserValidateWithEmail === undefined){
             setUser(UserValidateWithEmail);
         }
         else{
@@ -34,18 +44,6 @@ export const RegisterUser = () => {
                 icon: "error",
                 confirmButtonText: "OK",
               });         
-        }
-
-        return 1;
-
-        /*Validación simple de campos no vacíos*/
-        if(Email === null || Email === null || Pass === "" || Pass === ""){
-            return Swal.fire({
-                title: "Por favor, intenta de nuevo!",
-                text: "Debes llenar los campos de correo y password",
-                icon: "error",
-                confirmButtonText: "OK",
-              });
         }
     
         const d = new Date(); //Lo usamos para simular ID único de la carpeta
@@ -68,7 +66,7 @@ export const RegisterUser = () => {
             confirmButtonText: "OK",
         }).then((result) => {
             if (result.isConfirmed) {
-    
+                return history.push("/login");
             }
         });
     }
